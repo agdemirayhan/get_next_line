@@ -6,7 +6,7 @@
 /*   By: aagdemir <aagdemir@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 20:09:37 by aagdemir          #+#    #+#             */
-/*   Updated: 2024/04/28 17:09:30 by aagdemir         ###   ########.fr       */
+/*   Updated: 2024/04/28 17:13:47 by aagdemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ char	*get_next_line(int fd)
 	if (c == -1 && used == 0)
 	{
 		free(buffer);
-		return (NULL); // error or EOF
+		return (NULL);
 	}
 	buffer[used] = '\0';
 	return (buffer);
