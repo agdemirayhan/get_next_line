@@ -6,7 +6,7 @@
 /*   By: aagdemir <aagdemir@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 20:09:37 by aagdemir          #+#    #+#             */
-/*   Updated: 2024/04/28 08:59:58 by aagdemir         ###   ########.fr       */
+/*   Updated: 2024/04/28 17:09:30 by aagdemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,13 +23,12 @@ char	*get_next_line(int fd)
 	int		c;
 	char	*temp;
 
-	buffer = (char *)malloc((BUFFER_SIZE + 1) * sizeof(char));
+	buffer = (char *)malloc((buffer_size + 1) * sizeof(char));
 		// Allocate memory for the buffer
 	if (buffer == NULL)
 		return (NULL); // allocation error
-	buffer_size = BUFFER_SIZE;
 	used = 0;
-	while (((read(fd, &c, 2)) > 0) && used < BUFFER_SIZE)
+	while (((read(fd, &c, 2)) > 0) && used < buffer_size)
 	{
 		if (c == '\n')
 			break ;
