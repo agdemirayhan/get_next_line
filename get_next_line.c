@@ -6,7 +6,7 @@
 /*   By: aagdemir <aagdemir@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 20:09:37 by aagdemir          #+#    #+#             */
-/*   Updated: 2024/04/28 17:13:47 by aagdemir         ###   ########.fr       */
+/*   Updated: 2024/04/28 17:15:33 by aagdemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,6 @@ char	*get_next_line(int fd)
 
 int	main(void)
 {
-	// Open your file here (replace with your file opening code)
 	int fd = open("test.txt", O_RDONLY); // Assuming read-only access
 
 	if (fd == -1)
