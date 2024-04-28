@@ -7,8 +7,6 @@ OBJS = $(SRCS:.c=.o)
 
 INCLUDES = -Ift_printf
 
-EXTERNAL_FUNCS = malloc free write va_start va_arg va_copy va_end
-
 $(NAME): $(OBJS)
 	ar rcs $(NAME) $(OBJS)
 
