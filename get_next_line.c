@@ -6,7 +6,7 @@
 /*   By: aagdemir <aagdemir@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 20:09:37 by aagdemir          #+#    #+#             */
-/*   Updated: 2024/04/28 17:15:33 by aagdemir         ###   ########.fr       */
+/*   Updated: 2024/04/28 19:20:28 by aagdemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,73 +14,46 @@
 #include <fcntl.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 
 char	*get_next_line(int fd)
 {
-	char	*buffer;
-	size_t	buffer_size;
-	size_t	used;
-	int		c;
-	char	*temp;
+	char	buffer[BUFFER_SIZE];
+	ssize_t	bytes_read;
+	char	*line;
 
-	buffer = (char *)malloc((buffer_size + 1) * sizeof(char));
-		// Allocate memory for the buffer
-	if (buffer == NULL)
-		return (NULL); // allocation error
-	used = 0;
-	while (((read(fd, &c, 2)) > 0) && used < buffer_size)
+	bytes_read = read(fd, buffer, BUFFER_SIZE);
+	if (bytes_read == -1)
 	{
-		if (c == '\n')
-			break ;
-		if (used == buffer_size) // Check if the buffer is full
-		{
-			// Resize the buffer
-			temp = (char *)realloc(buffer, (buffer_size * 2 + 1)
-					* sizeof(char));
-			if (temp == NULL)
-			{
-				free(buffer);
-				return (NULL); // allocation error
-			}
-			buffer = temp;
-			buffer_size *= 2; // Update buffer_size
-		}
-		buffer[used++] = c;
-	}
-	if (c == -1 && used == 0)
-	{
-		free(buffer);
 		return (NULL);
 	}
-	buffer[used] = '\0';
-	return (buffer);
-}
-
-int	main(void)
-{
-	int fd = open("test.txt", O_RDONLY); // Assuming read-only access
-
-	if (fd == -1)
-	{
-		perror("open");
-		return (1);
-	}
-
-	char *line = get_next_line(fd);
+	line = (char *)malloc(bytes_read + 1);
 	if (line == NULL)
 	{
-		perror("read_line");
-		close(fd);
-		return (1);
+		return (NULL);
 	}
-
-	// Process the line here using `line`
-	printf("Read line: %s", line);
-
-	// Don't forget to free the memory after use
-	free(line);
-
-	close(fd); // Close the file descriptor
-
-	return (0);
+	memcpy(line, buffer, bytes_read);
+	line[bytes_read] = '\0';
+	write(STDOUT_FILENO, line, bytes_read);
+	return (line);
 }
+// int	main(void)
+// {
+// 	int fd;
+
+// 	// Open the file
+// 	fd = open("test.txt", O_RDONLY);
+
+// 	// Display the read data
+// 	get_next_line(fd);
+// 	get_next_line(fd);
+// 	get_next_line(fd);
+// 	get_next_line(fd);
+// 	get_next_line(fd);
+// 	get_next_line(fd);
+
+// 	// Close the file
+// 	close(fd);
+
+// 	return (0);
+// }
