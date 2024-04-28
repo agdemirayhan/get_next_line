@@ -6,7 +6,7 @@
 /*   By: aagdemir <aagdemir@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/20 18:50:14 by aagdemir          #+#    #+#             */
-/*   Updated: 2024/04/28 16:41:31 by aagdemir         ###   ########.fr       */
+/*   Updated: 2024/04/28 16:54:35 by aagdemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,35 +39,26 @@ int	ft_digitcounter(int n)
 int	ft_putnbr(int n)
 {
 	int	digitcounter;
-	int	check;
 
 	digitcounter = ft_digitcounter(n);
 	if (n == INT_MIN)
 	{
-		if(ft_putstr("-2147483648") == -1)
-			return -1;
-		return digitcounter;
+		if (ft_putstr("-2147483648") == -1)
+			return (-1);
+		return (digitcounter);
 	}
 	if (n < 0)
 	{
-		check = ft_putchar('-');
-		if (check == -1)
+		if (ft_putchar('-') == -1)
 			return (-1);
 		n = -n;
 	}
 	if (n >= 10)
 	{
-		if(ft_putnbr(n / 10) == -1)
-			return -1;
-		check = ft_putchar(n % 10 + '0');
-		if (check == -1)
+		if ((ft_putnbr(n / 10) == -1) || (ft_putchar(n % 10 + '0') == -1))
 			return (-1);
 	}
-	else
-	{
-		check = ft_putchar(n + '0');
-		if (check == -1)
-			return (-1);
-	}
+	else if (ft_putchar(n + '0') == -1)
+		return (-1);
 	return (digitcounter);
 }
