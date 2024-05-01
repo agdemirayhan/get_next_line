@@ -6,62 +6,60 @@
 /*   By: aagdemir <aagdemir@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 20:09:37 by aagdemir          #+#    #+#             */
-/*   Updated: 2024/05/01 12:23:02 by aagdemir         ###   ########.fr       */
+/*   Updated: 2024/05/01 19:22:32 by aagdemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-
-char	*ft_fill(int fd, char *lines_read, char *buffer, char *line)
+int characters_to_newline(char *buffer)
 {
-	if(ft_strchr(buffer, '\n'))
-		return printf("ABORT");
-		
-	
-	ft_memcpy(line, buffer, lines_read);
-	write(STDOUT_FILENO, line, lines_read);
-
-	return line;
+    int i = 0;
+    while (buffer[i] != '\0' && buffer[i] != '\n')
+        i++;
+    return i;
 }
 
-char	*get_next_line(int fd)
+char *ft_fill(size_t lines_read, char *buffer, char *line)
 {
-	char	*lines_read;
-	char	*line;
-	char	*buffer;
-
-	buffer = (char *)malloc(BUFFER_SIZE + 1);
-	lines_read = read(fd, buffer, BUFFER_SIZE);
-	if (lines_read == -1)
-	{
-		return (NULL);
-	}
-	line = (char *)malloc(lines_read + 1);
-	if (line == NULL)
-	{
-		return (NULL);
-	}
-	line = ft_fill(fd, lines_read, buffer, line);
-	return (line);
+    int i = characters_to_newline(buffer);
+    if (ft_strchr(buffer, '\n'))
+       ft_strljoin(line, buffer, i);
+    else
+        ft_strljoin(line, buffer, lines_read);
+		// printf("line:%s",line);
+    line[i] = '\0'; // Null-terminate the line
+    write(STDOUT_FILENO, line, lines_read);
+    return line;
 }
 
-int	main(void)
+char *get_next_line(int fd)
 {
-	int fd;
+    char *line;
+    char buffer[BUFFER_SIZE + 1];
+    ssize_t lines_read = read(fd, buffer, BUFFER_SIZE);
+    if (lines_read <= 0 || fd<0)
+    {
+        return NULL; // Error or end-of-file
+    }
+    line = (char *)malloc(lines_read + 1);
+    if (line == NULL)
+    {
+        return NULL; // Memory allocation failed
+    }
+    line = ft_fill(lines_read, buffer, line);
+    return line;
+}
 
-	// Open the file
-	fd = open("test.txt", O_RDONLY);
-
-	// Display the read data
-	get_next_line(fd);
-	// get_next_line(fd);
-	// get_next_line(fd);
-	// get_next_line(fd);
-	// get_next_line(fd);
-	// get_next_line(fd);
-
-	// Close the file
-	close(fd);
-
-	return (0);
+int main(void)
+{
+    int fd;
+    // Open the file
+    fd = open("test.txt", O_RDONLY);
+    // Display the read data
+    get_next_line(fd);
+    // get_next_line(fd);
+    // get_next_line(fd);
+    // Close the file
+    close(fd);
+    return 0;
 }
