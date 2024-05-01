@@ -6,19 +6,20 @@
 /*   By: aagdemir <aagdemir@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 20:09:37 by aagdemir          #+#    #+#             */
-/*   Updated: 2024/05/01 09:39:23 by aagdemir         ###   ########.fr       */
+/*   Updated: 2024/05/01 09:46:08 by aagdemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-
 char	*get_next_line(int fd)
 {
 	char	buffer[BUFFER_SIZE];
 	ssize_t	bytes_read;
-	static char	*line;
+	char	*line;
+	char	*buffer;
 
+	buffer = (char *)malloc(BUFFER_SIZE + 1) * sizeof(char);
 	bytes_read = read(fd, buffer, BUFFER_SIZE);
 	if (bytes_read == -1)
 	{
@@ -29,10 +30,15 @@ char	*get_next_line(int fd)
 	{
 		return (NULL);
 	}
-	ft_memcpy(line, buffer, bytes_read);
+	line = ft_fill(fd, bytes_read, buffer);
 	line[bytes_read] = '\0';
-	write(STDOUT_FILENO, line, bytes_read);
 	return (line);
+}
+
+char	*ft_fill(int fd, char *line, char *buffer)
+{
+	ft_memcpy(line, buffer, bytes_read);
+	write(STDOUT_FILENO, line, bytes_read);
 }
 // int	main(void)
 // {
