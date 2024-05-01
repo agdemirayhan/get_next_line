@@ -6,7 +6,7 @@
 /*   By: aagdemir <aagdemir@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 20:09:37 by aagdemir          #+#    #+#             */
-/*   Updated: 2024/05/01 19:22:32 by aagdemir         ###   ########.fr       */
+/*   Updated: 2024/05/01 19:24:07 by aagdemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,6 @@ int main(void)
     get_next_line(fd);
     // get_next_line(fd);
     // get_next_line(fd);
-    // Close the file
     close(fd);
     return 0;
 }
