@@ -6,21 +6,18 @@
 /*   By: aagdemir <aagdemir@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 20:09:37 by aagdemir          #+#    #+#             */
-/*   Updated: 2024/04/28 19:20:28 by aagdemir         ###   ########.fr       */
+/*   Updated: 2024/05/01 09:39:23 by aagdemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-#include <fcntl.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
+
 
 char	*get_next_line(int fd)
 {
 	char	buffer[BUFFER_SIZE];
 	ssize_t	bytes_read;
-	char	*line;
+	static char	*line;
 
 	bytes_read = read(fd, buffer, BUFFER_SIZE);
 	if (bytes_read == -1)
@@ -32,7 +29,7 @@ char	*get_next_line(int fd)
 	{
 		return (NULL);
 	}
-	memcpy(line, buffer, bytes_read);
+	ft_memcpy(line, buffer, bytes_read);
 	line[bytes_read] = '\0';
 	write(STDOUT_FILENO, line, bytes_read);
 	return (line);
