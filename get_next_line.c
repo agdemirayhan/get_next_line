@@ -6,7 +6,7 @@
 /*   By: aagdemir <aagdemir@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 20:09:37 by aagdemir          #+#    #+#             */
-/*   Updated: 2024/05/01 19:24:07 by aagdemir         ###   ########.fr       */
+/*   Updated: 2024/05/05 14:43:00 by aagdemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,25 +28,18 @@ char *ft_fill(size_t lines_read, char *buffer, char *line)
         ft_strljoin(line, buffer, lines_read);
 		// printf("line:%s",line);
     line[i] = '\0'; // Null-terminate the line
-    write(STDOUT_FILENO, line, lines_read);
     return line;
 }
 
 char *get_next_line(int fd)
 {
-    char *line;
-    char buffer[BUFFER_SIZE + 1];
-    ssize_t lines_read = read(fd, buffer, BUFFER_SIZE);
-    if (lines_read <= 0 || fd<0)
-    {
-        return NULL; // Error or end-of-file
-    }
-    line = (char *)malloc(lines_read + 1);
-    if (line == NULL)
-    {
-        return NULL; // Memory allocation failed
-    }
-    line = ft_fill(lines_read, buffer, line);
+    static char *left_from_line; // line until newline
+    char *buffer;
+    char *textarr;
+    
+    buffer = malloc ((BUFFER_SIZE + 1) * sizeof(char));
+    
+    textarr = ft_fill(fd,left_from_line,buffer);
     return line;
 }
 
