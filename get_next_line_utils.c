@@ -6,7 +6,7 @@
 /*   By: aagdemir <aagdemir@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 20:10:05 by aagdemir          #+#    #+#             */
-/*   Updated: 2024/05/01 19:13:26 by aagdemir         ###   ########.fr       */
+/*   Updated: 2024/05/05 17:29:27 by aagdemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,45 @@ char	*ft_strdup(const char *s1)
 	ft_memcpy(s2, s1, s1len);
 	s2[s1len] = '\0';
 	return (s2);
+}
+
+
+char	*ft_strjoin(char const *s1, char const *s2)
+{
+	size_t	s1len;
+	size_t	s2len;
+	char	*str;
+	size_t	totallen;
+
+	s1len = ft_strlen(s1);
+	s2len = ft_strlen(s2);
+	totallen = s1len + s2len;
+	str = (char *)malloc((totallen + 1) * sizeof(char));
+	if (str == NULL)
+		return (NULL);
+	ft_memcpy(str, s1, s1len);
+	ft_memcpy(str + s1len, s2, s2len);
+	str[totallen] = '\0';
+	return (str);
+}
+
+void	*ft_memcpy(void *dst, const void *src, size_t n)
+{
+	char		*destination;
+	const char	*source;
+	size_t		i;
+
+	if (dst == NULL && src == NULL)
+		return (NULL);
+	destination = dst;
+	source = src;
+	i = 0;
+	while (i < n)
+	{
+		destination[i] = source[i];
+		i++;
+	}
+	return (dst);
 }
 
 char	*ft_substr(char const *s, unsigned int start, size_t len)
@@ -46,39 +85,6 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 	return (str);
 }
 
-char	*ft_strljoin(char *line, const char *buffer, size_t len)
-{
-	size_t line_len = ft_strlen(line);
-	size_t i;
-
-	i = 0;
-	while (buffer[i] && i < len)
-	{
-		line[line_len + i] = buffer[i];
-		i++;
-	}
-	line[line_len + i] = '\0';
-	return (line);
-}
-
-void	*ft_memcpy(void *dst, const void *src, size_t n)
-{
-	char *destination;
-	const char *source;
-	size_t i;
-
-	if (dst == NULL && src == NULL)
-		return (NULL);
-	destination = dst;
-	source = src;
-	i = 0;
-	while (i < n)
-	{
-		destination[i] = source[i];
-		i++;
-	}
-	return (dst);
-}
 
 size_t	ft_strlen(const char *s)
 {
