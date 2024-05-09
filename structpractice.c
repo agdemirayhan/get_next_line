@@ -12,38 +12,59 @@ struct				node
 };
 typedef struct node	node_t;
 
+node_t	*create_new_node(node_t *head, char *str)
+{
+	node_t	*result;
 
+	result = malloc(sizeof(node_t));
+	result->string = str;
+	result->next = NULL;
+	return (result);
+}
+
+void	printlist(node_t *head)
+{
+	node_t	*temporary=head;
+
+	while (temporary != NULL)
+	{
+		printf("%s", temporary->string);
+		temporary = temporary->next;
+	}
+	printf("\n");
+}
+
+// node_t	*insert_at_head(node_t **head, node_t *node_to_insert)
+// 	{
+// 		node_to_insert->next = *head;
+// 		*head = node_to_insert;
+// 		return (node_to_insert);
+// 	}
 
 int	main(void)
 {
-	char *buffer;
-	node_t *node;
-	node_t *head;
-	int readed;
-	int fd;
+	char	*buffer;
+	node_t	*node;
+	node_t	*head;
+	int		readed;
+	int		fd;
 
-	buffer = malloc((BUFFER_SIZE +1) * sizeof(char));
+	buffer = malloc((BUFFER_SIZE + 1) * sizeof(char));
 	head = malloc(sizeof(node_t));
-
-	fd = open("test.txt",O_RDONLY);
-	readed = read(fd,buffer,BUFFER_SIZE);
+	fd = open("test.txt", O_RDONLY);
+	readed = read(fd, buffer, BUFFER_SIZE);
 	head->string = buffer;
 	head->next = NULL;
-	printf("%s",head->string);
-	free(buffer);
-	free(head);
-	readed = read(fd,buffer,BUFFER_SIZE);
-	node = malloc(sizeof(node_t));
-	head->next = node;
-	node->next = NULL;
-	printf("%s",node->string);
-	free(buffer);
-	free(node);
+	// printf("%s", head->string);
+	// readed = read(fd, buffer, BUFFER_SIZE);
+	// node = create_new_node(head, buffer);
 
+	printlist(head);
+	free(head);
+	free(buffer);
+	// free(node);
 	close(fd);
 }
-
-
 
 // *************************************
 // LESSON ON YOUTUBE (https://www.youtube.com/watch?v=VOpjAHCee7c&ab_channel=JacobSorber)
@@ -60,14 +81,14 @@ int	main(void)
 // 	node_t *result = malloc(sizeof(node_t));
 // 	result->value = value;
 // 	result->next = NULL;
-// 	return result;
+// 	return (result);
 // }
 
 // node_t *insert_at_head(node_t **head, node_t *node_to_insert)
 // {
 // 	node_to_insert->next = *head;
 // 	*head = &node_to_insert;
-// 	return node_to_insert;
+// 	return (node_to_insert);
 // }
 
 // node_t *insert_after_node(node_t *node_to_insert_after, node_t *newnode)
@@ -81,10 +102,10 @@ int	main(void)
 // 	node_t *tmp = head;
 // 	while(tmp != NULL)
 // 	{
-// 		if(tmp->value == value) return tmp;
+// 		if(tmp->value == value) return (tmp);
 // 		tmp = tmp->next;
 // 	}
-// 	return NULL;
+// 	return (NULL);
 // }
 // int main()
 // {
@@ -97,7 +118,6 @@ int	main(void)
 // 		insert_at_head(&head,tmp);
 // 	}
 
-
 // }
 
 // *************************************
@@ -107,7 +127,7 @@ int	main(void)
 // 	node_t *result = malloc(sizeof(node_t));
 // 	result->value = value;
 // 	result->next = NULL;
-// 	return result;
+// 	return (result);
 // }
 // int main()
 // {
