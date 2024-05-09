@@ -1,52 +1,64 @@
+#include <fcntl.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
+
+#define BUFFER_SIZE 10
 
 struct				node
 {
-	int				value;
+	char			*string;
 	struct node		*next;
 };
 typedef struct node	node_t;
 
-void	printlist(node_t *head)
-{
-	node_t	*temphead;
-
-	temphead = head;
-	while (temphead)
-	{
-		printf("%d - ", temphead->value);
-		temphead = temphead->next;
-	}
-	printf("\n");
-}
-
-node_t *create_new_node(int value)
-{
-	node_t *result = malloc(sizeof(node_t));
-	result->value = value;
-	result->next = NULL;
-
-	return result;
-}
-
 int	main(void)
 {
-	node_t *n1, n2, n3;
+	char *buffer;
+	node_t *node;
 	node_t *head;
+	int readed;
+	int fd;
 
-	n1 = malloc(sizeof(node_t));
-	n1->value = 1;
-	n2.value = 2;
-	n3.value = 3;
+	buffer = malloc((BUFFER_SIZE +1) * sizeof(char));
+	head = malloc(sizeof(node_t));
 
-	// link the list
-	head = n1;
-	n3.next = NULL;
-	n2.next = &n3;
-	n1->next = &n2;
+	fd = open("test.txt",O_RDONLY);
+	readed = read(fd,buffer,BUFFER_SIZE);
+	head->string = buffer;
+	head->next = NULL;
+	printf("%s",head->string);
+	free(buffer);
+	free(head);
+	readed = read(fd,buffer,BUFFER_SIZE);
+	node = malloc(sizeof(node_t));
+	head->next = node;
+	node->next = NULL;
+	printf("%s",node->string);
 
-	printlist(head);
 
-	return (0);
+	close(fd);
 }
+
+
+// struct node {
+// 	int value;
+// 	struct node *next;
+// };
+// typedef struct node node_t;
+
+// int main()
+// {
+// 	node_t n1,n2,n3;
+// 	node_t *head;
+
+// 	n1.value = 1;
+// 	n2.value = 2;
+// 	n3.value = 3;
+
+// 	head = &n3;
+// 	n3.next = &n2;
+// 	n2.next = &n1;
+// 	n1.next = NULL;
+
+// }
