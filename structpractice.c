@@ -1,6 +1,7 @@
 #include <fcntl.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <unistd.h>
 
 #define BUFFER_SIZE 10
@@ -12,76 +13,190 @@ struct				node
 };
 typedef struct node	node_t;
 
-node_t	*create_new_node(node_t *head, char *str)
+void	copy_str(node_t *list, char *str)
 {
-	node_t	*result;
+	int	i;
+	int	k;
 
-	result = malloc(sizeof(node_t));
-	result->string = str;
-	result->next = NULL;
-	return (result);
-}
-
-void	printlist(node_t *head)
-{
-	node_t	*temporary;
-
-	temporary = head;
-	while (temporary != NULL)
+	if (NULL == list)
+		return ;
+	k = 0;
+	while (list)
 	{
-		printf("%s", temporary->string);
-		temporary = temporary->next;
+		i = 0;
+		while (list->string[i])
+		{
+			if (list->string[i] == '\n')
+			{
+				str[k++] = '\n';
+				str[k] = '\0';
+				return ;
+			}
+			str[k++] = list->string[i++];
+		}
+		list = list->next;
 	}
-	// printf("\n");
+	str[k] = '\0';
 }
 
-// node_t	*insert_at_head(node_t **head, node_t *node_to_insert)
+void	dealloc(node_t **list, node_t *clean_node, char *buf)
+{
+	node_t	*tmp;
+
+	if (NULL == *list)
+		return ;
+	while (*list)
+	{
+		tmp = (*list)->next;
+		free((*list)->string);
+		free(*list);
+		*list = tmp;
+	}
+	*list = NULL;
+	if (clean_node->string[0])
+		*list = clean_node;
+	else
+	{
+		free(buf);
+		free(clean_node);
+	}
+}
+
+int	char_to_newline(char *buffer)
+{
+	int	i;
+
+	i = 0;
+	while (buffer[i] != '\n')
+		i++;
+	return (i);
+}
+
+node_t	*find_last_node(node_t *list)
+{
+	if (NULL == list)
+		return (NULL);
+	while (list->next)
+		list = list->next;
+	return (list);
+}
+
+void	append_to_list(node_t **list, char *buffer)
+{
+	node_t	*new_node;
+	node_t	*last_node;
+
+	last_node = find_last_node(*list);
+	new_node = malloc(sizeof(node_t));
+	if (NULL == new_node)
+		return ;
+	if (NULL == last_node)
+		*list = new_node;
+	else
+		last_node->next = new_node;
+	new_node->string = buffer;
+	new_node->next = NULL;
+}
+
+char	*ft_substr(char *s, unsigned int start, size_t len)
+{
+	char	*str;
+	size_t	slen;
+
+	if (s == NULL)
+		return (NULL);
+	slen = strlen(s);
+	if (start >= slen)
+		return (strdup(""));
+	if (len > (slen - start))
+		len = slen - start;
+	str = malloc((len + 1) * sizeof(char));
+	if (str == NULL)
+		return (NULL);
+	memcpy(str, s + start, len);
+	str[len] = '\0';
+	return (str);
+}
+
+// void	create_list(node_t **list, int fd)
+// {
+// 	int		char_read;
+// 	char	*buf;
+
+// 	while (!found_newline(*list))
 // 	{
-// 		node_to_insert->next = *head;
-// 		*head = node_to_insert;
-// 		return (node_to_insert);
+// 		buf = malloc(BUFFER_SIZE + 1);
+// 		if (NULL == buf)
+// 			return ;
+// 		char_read = read(fd, buf, BUFFER_SIZE);
+// 		if (!char_read)
+// 		{
+// 			free(buf);
+// 			return ;
+// 		}
+// 		buf[char_read] = '\0';
+// 		append_to_list(list, buf);
 // 	}
+// }
+
+void	print_node_list(node_t *list)
+{
+	node_t	*tmp;
+
+	tmp = list;
+	while (tmp != NULL)
+	{
+		printf("%s", tmp->string); // Print the string member of each node
+		tmp = tmp->next;
+	}
+}
 
 int	main(void)
 {
 	char			*buffer;
-	node_t			*node;
-	node_t			*head;
-	int				readed;
+	int				readtext;
 	int				fd;
-	static node_t	*list = NULL;
-	char			next_line;
+	char			*firstpartstr;
+	char			*secondpartstr;
+	static node_t	*list;
+	node_t			*newnode;
+	int				charafternewline;
+	node_t			*last_node;
 
-	buffer = malloc((BUFFER_SIZE + 1) * sizeof(char));
-	head = malloc(sizeof(node_t));
 	fd = open("test.txt", O_RDONLY);
-	readed = read(fd, buffer, BUFFER_SIZE);
-	head->string = buffer;
-	head->next = NULL;
-	readed = read(fd, buffer, BUFFER_SIZE);
-	node = malloc(sizeof(node_t));
-	head->next = node;
-	node = create_new_node(head, buffer);
-	printlist(head);
-	free(head);
-	free(buffer);
-	free(node);
-	close(fd);
+	readtext = 1;
+	while (readtext > 0)
+	{
+		buffer = malloc(BUFFER_SIZE + 1);
+		readtext = read(fd, buffer, BUFFER_SIZE);
+		if (!strchr(buffer, '\n'))
+		{
+			buffer[readtext] = '\0';
+			append_to_list(&list, buffer);
+		}
+		else
+		{
+			firstpartstr = malloc(sizeof(char) * char_to_newline(buffer));
+			firstpartstr = ft_substr(buffer, 0, char_to_newline(buffer));
+			append_to_list(&list, firstpartstr);
+			// free(list);
+			// list = NULL;
+			secondpartstr = malloc(sizeof(char) * char_to_newline(buffer));
+			secondpartstr = ft_substr(buffer, char_to_newline(buffer),
+					strlen(buffer));
+			charafternewline = strlen(buffer) - char_to_newline(buffer);
+			secondpartstr[charafternewline] = '\0';
+			newnode = malloc(sizeof(node_t));
+			newnode->string = secondpartstr;
+			newnode->next = NULL;
+			last_node = find_last_node(list);
+			last_node->next = newnode; // Append newnode to the last node
+				// free(list);
+			
+			// dealloc(&list, newnode, buffer);
+		}
+	}
 }
-
-// void newnode_handler(t_list **list, node_t *last_node, char *buf)
-// {
-// 	node_t *new_node;
-
-// 	new_node = malloc(sizeof(node_t));
-// 	if(last_node == NULL)
-// 		*list = new_node;
-// 	else
-// 		last_node ->next = new_node;
-// 		new_node->string = buf;
-// 		new_node->next = NULL;
-
-// }
 
 // *************************************
 // LESSON ON YOUTUBE (https://www.youtube.com/watch?v=VOpjAHCee7c&ab_channel=JacobSorber)

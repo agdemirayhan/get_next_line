@@ -6,7 +6,7 @@
 /*   By: aagdemir <aagdemir@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 20:09:37 by aagdemir          #+#    #+#             */
-/*   Updated: 2024/05/09 20:13:32 by aagdemir         ###   ########.fr       */
+/*   Updated: 2024/05/05 19:12:50 by aagdemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,14 +62,14 @@ char *get_next_line(int fd) {
     return textarr;
 }
 
-int main(void) {
-    int fd;
-    // Open the file
-    fd = open("test.txt", O_RDONLY);
-    // Display the read data
-    get_next_line(fd);
-    // get_next_line(fd);
-    // get_next_line(fd);
-    close(fd);
-    return 0;
-}
+// int main(void) {
+//     int fd;
+//     // Open the file
+//     fd = open("test.txt", O_RDONLY);
+//     // Display the read data
+//     get_next_line(fd);
+//     // get_next_line(fd);
+//     // get_next_line(fd);
+//     close(fd);
+//     return 0;
+// }
