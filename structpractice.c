@@ -24,14 +24,15 @@ node_t	*create_new_node(node_t *head, char *str)
 
 void	printlist(node_t *head)
 {
-	node_t	*temporary=head;
+	node_t	*temporary;
 
+	temporary = head;
 	while (temporary != NULL)
 	{
 		printf("%s", temporary->string);
 		temporary = temporary->next;
 	}
-	printf("\n");
+	// printf("\n");
 }
 
 // node_t	*insert_at_head(node_t **head, node_t *node_to_insert)
@@ -43,11 +44,13 @@ void	printlist(node_t *head)
 
 int	main(void)
 {
-	char	*buffer;
-	node_t	*node;
-	node_t	*head;
-	int		readed;
-	int		fd;
+	char			*buffer;
+	node_t			*node;
+	node_t			*head;
+	int				readed;
+	int				fd;
+	static node_t	*list = NULL;
+	char			next_line;
 
 	buffer = malloc((BUFFER_SIZE + 1) * sizeof(char));
 	head = malloc(sizeof(node_t));
@@ -55,16 +58,30 @@ int	main(void)
 	readed = read(fd, buffer, BUFFER_SIZE);
 	head->string = buffer;
 	head->next = NULL;
-	// printf("%s", head->string);
-	// readed = read(fd, buffer, BUFFER_SIZE);
-	// node = create_new_node(head, buffer);
-
+	readed = read(fd, buffer, BUFFER_SIZE);
+	node = malloc(sizeof(node_t));
+	head->next = node;
+	node = create_new_node(head, buffer);
 	printlist(head);
 	free(head);
 	free(buffer);
-	// free(node);
+	free(node);
 	close(fd);
 }
+
+// void newnode_handler(t_list **list, node_t *last_node, char *buf)
+// {
+// 	node_t *new_node;
+
+// 	new_node = malloc(sizeof(node_t));
+// 	if(last_node == NULL)
+// 		*list = new_node;
+// 	else
+// 		last_node ->next = new_node;
+// 		new_node->string = buf;
+// 		new_node->next = NULL;
+
+// }
 
 // *************************************
 // LESSON ON YOUTUBE (https://www.youtube.com/watch?v=VOpjAHCee7c&ab_channel=JacobSorber)
