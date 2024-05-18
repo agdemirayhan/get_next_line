@@ -6,7 +6,7 @@
 /*   By: aagdemir <aagdemir@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 20:09:37 by aagdemir          #+#    #+#             */
-/*   Updated: 2024/05/18 09:19:37 by aagdemir         ###   ########.fr       */
+/*   Updated: 2024/05/18 09:22:43 by aagdemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,6 @@ void	listhandler(int fd, node_t *list)
 			return ;
 		}
 		buffer[read_block] = '\0';
-		append(list, buffer);
 	}
 }
 
