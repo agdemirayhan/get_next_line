@@ -13,24 +13,81 @@ struct				node
 };
 typedef struct node	node_t;
 
+node_t	*find_last_node(node_t *list)
+{
+	if (NULL == list)
+		return (NULL);
+	while (list->next)
+		list = list->next;
+	return (list);
+}
+
+void	dealloc(node_t **list, node_t *clean_node, char *buf)
+{
+	node_t	*tmp;
+
+	if (NULL == *list)
+		return ;
+	while (*list)
+	{
+		tmp = (*list)->next;
+		free((*list)->string);
+		free(*list);
+		*list = tmp;
+	}
+	*list = NULL;
+	if (clean_node->string[0])
+		*list = clean_node;
+	else
+	{
+		free(buf);
+		free(clean_node);
+	}
+}
+
 int	newline_checker(node_t *list)
 {
-	char	*string;
+	int	i;
 
-	while (list != NULL)
+	if (NULL == list)
+		return (0);
+	while (list)
 	{
-		string = list->string;
-		while (*string != '\0')
+		i = 0;
+		while (list->string[i] && i < BUFFER_SIZE)
 		{
-			if (*string == '\n')
-			{
-				return (-1); // Newline found
-			}
-			string++;
+			if (list->string[i] == '\n')
+				return (1);
+			++i;
 		}
 		list = list->next;
 	}
-	return (1); // Newline not found in any node
+	return (0);
+}
+
+void	polish_list(node_t **list)
+{
+	node_t	*last_node;
+	node_t	*clean_node;
+	int		i;
+	int		k;
+	char	*buf;
+
+	buf = malloc(BUFFER_SIZE + 1);
+	clean_node = malloc(sizeof(node_t));
+	if (NULL == buf || NULL == clean_node)
+		return ;
+	last_node = find_last_node(*list);
+	i = 0;
+	k = 0;
+	while (last_node->string[i] && last_node->string[i] != '\n')
+		++i;
+	while (last_node->string[i] && last_node->string[++i])
+		buf[k++] = last_node->string[i];
+	buf[k] = '\0';
+	clean_node->string = buf;
+	clean_node->next = NULL;
+	dealloc(list, clean_node, buf);
 }
 
 void	copy_str(node_t *list, char *str)
@@ -59,23 +116,14 @@ void	copy_str(node_t *list, char *str)
 	str[k] = '\0';
 }
 
-int	char_to_newline(char *buffer)
+int	char_to_newline(node_t *list)
 {
 	int	i;
 
 	i = 0;
-	while (buffer[i] != '\n')
+	while (list->string[i] != '\n')
 		i++;
 	return (i);
-}
-
-node_t	*find_last_node(node_t *list)
-{
-	if (NULL == list)
-		return (NULL);
-	while (list->next)
-		list = list->next;
-	return (list);
 }
 
 void	append_to_list(node_t **list, char *buffer)
@@ -164,34 +212,22 @@ char	*linehandler(node_t *list)
 
 void	listhandler(node_t **list, int fd)
 {
-	int		readtext;
-	char	*buffer;
+	int		char_read;
+	char	*buf;
 
-	*list = NULL;
-	while (1)
+	while (!newline_checker(*list))
 	{
-		buffer = malloc(sizeof(char) * BUFFER_SIZE);
-		if (buffer == NULL)
+		buf = malloc(BUFFER_SIZE + 1);
+		if (NULL == buf)
+			return ;
+		char_read = read(fd, buf, BUFFER_SIZE);
+		if (!char_read)
 		{
+			free(buf);
 			return ;
 		}
-		readtext = read(fd, buffer, BUFFER_SIZE);
-		if (readtext == -1)
-		{
-			free(buffer);
-			return ;
-		}
-		else if (readtext == 0)
-		{
-			free(buffer);
-			return ;
-		}
-		append_to_list(list, buffer);
-		// Check if the last character read was a newline
-		if (buffer[readtext - 1] == '\n')
-		{
-			break ; // Exit the loop if a newline is encountered
-		}
+		buf[char_read] = '\0';
+		append_to_list(list, buf);
 	}
 }
 
@@ -200,8 +236,13 @@ char	*get_next_line(int fd)
 	static node_t	*list = NULL;
 	char			*nextline;
 
+	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, &nextline, 0) < 0)
+		return (NULL);
 	listhandler(&list, fd);
+	if (list == NULL)
+		return (NULL);
 	nextline = linehandler(list);
+	polish_list(&list);
 	return (nextline);
 }
 
