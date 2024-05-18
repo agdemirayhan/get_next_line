@@ -6,7 +6,7 @@
 /*   By: aagdemir <aagdemir@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 20:09:37 by aagdemir          #+#    #+#             */
-/*   Updated: 2024/05/18 09:22:43 by aagdemir         ###   ########.fr       */
+/*   Updated: 2024/05/18 13:46:58 by aagdemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,34 +57,21 @@ void	listhandler(int fd, node_t *list)
 	}
 }
 
-char	*ft_fill(int fd, char *left_from_line, char *buffer)
+char	*ft_fill(t_list **list, char *buf)
 {
-	ssize_t	readblock;
-	char	*temp;
-	int		i;
+		t_list	*new_node;
+	t_list	*last_node;
 
-	readblock = read(fd, buffer, BUFFER_SIZE);
-	if (readblock < 1)
-	{
-		return (NULL);
-	}
-	if (!left_from_line)
-		left_from_line = ft_strdup("");
-	temp = left_from_line;
-	left_from_line = ft_strjoin(temp, buffer);
-	free(temp);
-	temp = NULL;
-	if (strchr(left_from_line, '\n'))
-	{
-		i = characters_to_newline(left_from_line);
-		left_from_line[i + 1] = '\0'; // Ensure null termination
-		return (left_from_line);
-	}
+	last_node = find_last_node(*list);
+	new_node = malloc(sizeof(t_list));
+	if (NULL == new_node)
+		return ;
+	if (NULL == last_node)
+		*list = new_node;
 	else
-	{
-		// Fix recursion by returning the result of ft_fill
-		return (ft_fill(fd, left_from_line, buffer));
-	}
+		last_node->next = new_node;
+	new_node->str_buf = buf;
+	new_node->next = NULL;
 }
 
 char	*get_next_line(int fd)
