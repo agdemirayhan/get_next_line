@@ -6,7 +6,7 @@
 /*   By: aagdemir <aagdemir@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 20:09:37 by aagdemir          #+#    #+#             */
-/*   Updated: 2024/05/18 13:46:58 by aagdemir         ###   ########.fr       */
+/*   Updated: 2024/05/18 21:57:46 by aagdemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,9 +23,9 @@ int	characters_to_newline(node_t *list)
 	while (list)
 	{
 		i = 0;
-		while (list->str_buf[i])
+		while (list->string[i])
 		{
-			if (list->str_buf[i] == '\n')
+			if (list->string[i] == '\n')
 			{
 				++len;
 				return (len);
@@ -55,11 +55,12 @@ void	listhandler(int fd, node_t *list)
 		}
 		buffer[read_block] = '\0';
 	}
+	appendtolist(list,buffer);
 }
 
-char	*ft_fill(t_list **list, char *buf)
+void	appendtolist(t_list **list, char *buffer)
 {
-		t_list	*new_node;
+	t_list	*new_node;
 	t_list	*last_node;
 
 	last_node = find_last_node(*list);
@@ -70,8 +71,23 @@ char	*ft_fill(t_list **list, char *buf)
 		*list = new_node;
 	else
 		last_node->next = new_node;
-	new_node->str_buf = buf;
+	new_node->string = buffer;
 	new_node->next = NULL;
+}
+
+char	*ft_fill(t_list *list)
+{
+	int		str_len;
+	char	*next_str;
+
+	if (NULL == list)
+		return (NULL);
+	str_len = len_to_newline(list);
+	next_str = malloc(str_len + 1);
+	if (NULL == next_str)
+		return (NULL);
+	copy_str(list, next_str);
+	return (next_str);
 }
 
 char	*get_next_line(int fd)
@@ -82,7 +98,7 @@ char	*get_next_line(int fd)
 	if (fd < 0 || BUFFER_SIZE < 1 || read(fd, 0, 0) < 0)
 		return (NULL);
 	listhandler(fd, &list);
-	// textarr = ft_fill(fd, left_from_line, buffer);
+	textarr = ft_fill(list);
 	free(buffer);
 	return (textarr);
 }
