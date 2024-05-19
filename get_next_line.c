@@ -6,11 +6,19 @@
 /*   By: aagdemir <aagdemir@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 20:09:37 by aagdemir          #+#    #+#             */
-/*   Updated: 2024/05/18 21:57:46 by aagdemir         ###   ########.fr       */
+/*   Updated: 2024/05/19 08:47:39 by aagdemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+
+struct				node
+{
+	char			*string;
+	struct node		*next;
+};
+typedef struct node	node_t;
+
 
 int	characters_to_newline(node_t *list)
 {
@@ -58,13 +66,13 @@ void	listhandler(int fd, node_t *list)
 	appendtolist(list,buffer);
 }
 
-void	appendtolist(t_list **list, char *buffer)
+void	appendtolist(node_t **list, char *buffer)
 {
-	t_list	*new_node;
-	t_list	*last_node;
+	node_t	*new_node;
+	node_t	*last_node;
 
 	last_node = find_last_node(*list);
-	new_node = malloc(sizeof(t_list));
+	new_node = malloc(sizeof(node_t));
 	if (NULL == new_node)
 		return ;
 	if (NULL == last_node)
@@ -75,7 +83,7 @@ void	appendtolist(t_list **list, char *buffer)
 	new_node->next = NULL;
 }
 
-char	*ft_fill(t_list *list)
+char	*fill(node_t *list)
 {
 	int		str_len;
 	char	*next_str;
@@ -98,7 +106,7 @@ char	*get_next_line(int fd)
 	if (fd < 0 || BUFFER_SIZE < 1 || read(fd, 0, 0) < 0)
 		return (NULL);
 	listhandler(fd, &list);
-	textarr = ft_fill(list);
+	textarr = fill(list);
 	free(buffer);
 	return (textarr);
 }
