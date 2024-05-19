@@ -6,7 +6,7 @@
 /*   By: aagdemir <aagdemir@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 20:10:05 by aagdemir          #+#    #+#             */
-/*   Updated: 2024/05/19 18:47:40 by aagdemir         ###   ########.fr       */
+/*   Updated: 2024/05/19 20:09:11 by aagdemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,13 +76,13 @@ int	newline_check(node_t *list)
 		{
 			if (list->string[i] == '\n')
 				return (1);
-			i++;
+			++i;
 		}
 		list = list->next;
 	}
 	return (0);
 }
-
+	
 void	copy_str(node_t *list, char *str)
 {
 	int	i;

@@ -6,7 +6,7 @@
 /*   By: aagdemir <aagdemir@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 20:09:37 by aagdemir          #+#    #+#             */
-/*   Updated: 2024/05/19 18:53:43 by aagdemir         ###   ########.fr       */
+/*   Updated: 2024/05/19 20:22:36 by aagdemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,10 @@ void	next_line_organizer(node_t **list)
     if(newline_node->string[0])
         *list = newline_node;
     else
-        free(newline_node);
+	{
+    free(newline_node);
     free(buffer);
+	}
     
 }
 
@@ -70,6 +72,8 @@ void	listhandler(int fd, node_t **list)
 	while (!newline_check(*list))
 	{
 		buffer = malloc(BUFFER_SIZE + 1);
+		if(buffer == NULL)
+			return ;
 		read_block = read(fd, buffer, BUFFER_SIZE);
 		if (!read_block)
 		{
@@ -104,8 +108,7 @@ char	*get_next_line(int fd)
 
 	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, &textarr, 0) < 0)
 	{
-		if (list)
-		{
+		
 			while (list)
 			{
 				temp = list;
@@ -113,7 +116,7 @@ char	*get_next_line(int fd)
 				free(temp->string);
 				free(temp);
 			}
-		}
+		
 		return (NULL);
 	}
 	listhandler(fd, &list);
@@ -124,19 +127,19 @@ char	*get_next_line(int fd)
 	return (textarr);
 }
 
-int	main(void)
-{
-	int		fd;
-	char	*line;
+// int	main(void)
+// {
+// 	int		fd;
+// 	char	*line;
 
-	fd = open("test.txt", O_RDONLY);
-	line = get_next_line(fd);
-	while (line != NULL)
-	{
-		printf("%s", line);
-		free(line);
-		line = get_next_line(fd);
-	}
-	close(fd);
-	return (0);
-}
+// 	fd = open("test.txt", O_RDONLY);
+// 	line = get_next_line(fd);
+// 	while (line != NULL)
+// 	{
+// 		printf("%s", line);
+// 		free(line);
+// 		line = get_next_line(fd);
+// 	}
+// 	close(fd);
+// 	return (0);
+// }
