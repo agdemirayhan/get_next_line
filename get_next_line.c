@@ -6,47 +6,62 @@
 /*   By: aagdemir <aagdemir@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 20:09:37 by aagdemir          #+#    #+#             */
-/*   Updated: 2024/05/19 12:01:02 by aagdemir         ###   ########.fr       */
+/*   Updated: 2024/05/19 16:52:32 by aagdemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-void  next_line_organizer(node_t **list)
+ void	 delete_list(node_t **list)
 {
-    char *buffer;
-    node_t *newline_node;
-    node_t *last_node;
-    int i;
-    int j;
+	node_t	*tmp;
 
-    buffer = malloc(sizeof(node_t));
-    last_node = find_last_node(*list);
-    newline_node = malloc(sizeof(node_t));
-    i =0;
-    j =0;
-    while(last_node->string[i]!='\n')
-        i++;
-    while(last_node->string[i]!='\0')
+	if (NULL == *list)
+		return ;
+	while (*list)
+	{
+		tmp = (*list)->next;
+		free((*list)->string);
+		free(*list);
+		*list = tmp;
+	}
+	*list = NULL;
+	
+}
+
+
+    void  next_line_organizer(node_t **list)
     {
-        buffer[j] = last_node->string[i];
-        j++;
-        i++;
-    }
-    buffer[j] = '\0';
-    newline_node->string = buffer;
-    printf("newline_node:%s",newline_node->string);
-}
+        char *buffer;
+        node_t *newline_node;
+        node_t *last_node;
+        int i;
+        int j;
 
-node_t *delete_list(node_t *node)
-{
-  if (node != NULL)
-  {
-    delete_list(node->next);
-    free(node);
-  }
-  return NULL;
-}
+        buffer = malloc(sizeof(char));
+
+        last_node = find_last_node(*list);
+        newline_node = malloc(sizeof(node_t));
+ 
+        i =0;
+        j =0;
+        while (last_node->string[i] != '\n' && last_node->string[i] != '\0')
+            i++;
+        while(last_node->string[++i]!='\0')
+        {
+            buffer[j] = last_node->string[i];
+            j++;
+        }
+        buffer[j] = '\0';
+        newline_node->string = buffer;
+        newline_node->next=NULL;
+        delete_list(list);
+        
+        // printf("newline_node:%s\n",newline_node->string);
+    
+    }
+
+
 
 void print_list(node_t *head)
 {
@@ -132,8 +147,8 @@ char	*fill(node_t *list)
 
 	if (NULL == list)
 		return (NULL);
-	next_str = malloc(str_len + 1);
 	str_len = characters_to_newline(list);
+	next_str = malloc(str_len + 1);
 	if (NULL == next_str)
 		return (NULL);
 	copy_str(list, next_str);
@@ -144,10 +159,25 @@ char	*get_next_line(int fd)
 {
 	static node_t	*list;
 	char			*textarr;
+    node_t *temp;
 
-	if (fd < 0 || BUFFER_SIZE < 1 || read(fd, 0, 0) < 0)
+	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, &textarr, 0) < 0)
+	{
+		if (list)
+		{
+			while (list)
+			{
+				node_t *temp = list;
+				list = list->next;
+				free(temp->string);
+				free(temp);
+			}
+		}
 		return (NULL);
+	}
 	listhandler(fd, &list);
+    if (list == NULL)
+		return (NULL);
 	// printf("first\n");
 	// print_list(list);
 	textarr = fill(list);
@@ -160,13 +190,18 @@ char	*get_next_line(int fd)
 
 int main(void) {
     int fd;
-    // Open the file
+	char *line;
     fd = open("test.txt", O_RDONLY);
-    // Display the read data
-    get_next_line(fd);
-    // get_next_line(fd);
+   line = get_next_line(fd);
+	while (line != NULL)
+	{
+		printf("%s", line);
+		free(line);
+		line = get_next_line(fd);
+	}
     // get_next_line(fd);
     // get_next_line(fd);
     close(fd);
     return (0);
 }
+
