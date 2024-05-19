@@ -6,7 +6,7 @@
 /*   By: aagdemir <aagdemir@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 20:10:05 by aagdemir          #+#    #+#             */
-/*   Updated: 2024/05/19 18:02:26 by aagdemir         ###   ########.fr       */
+/*   Updated: 2024/05/19 18:47:40 by aagdemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ int	newline_check(node_t *list)
 	while (list)
 	{
 		i = 0;
-		while (list->string[i] && i < BUFFER_SIZE)
+		while (list->string[i] && i < BUFFER_SIZE )
 		{
 			if (list->string[i] == '\n')
 				return (1);

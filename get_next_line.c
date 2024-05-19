@@ -6,7 +6,7 @@
 /*   By: aagdemir <aagdemir@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 20:09:37 by aagdemir          #+#    #+#             */
-/*   Updated: 2024/05/19 18:06:37 by aagdemir         ###   ########.fr       */
+/*   Updated: 2024/05/19 18:53:43 by aagdemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,22 +22,29 @@ void	next_line_organizer(node_t **list)
 	int		i;
 	int		j;
 
-	buffer = malloc(sizeof(char));
+	buffer = malloc(BUFFER_SIZE + 1);
+        if(buffer == NULL)
+            return ;
 	last_node = find_last_node(*list);
 	newline_node = malloc(sizeof(node_t));
+        if(newline_node == NULL)
+            return ;
 	i = 0;
 	j = 0;
-	while (last_node->string[i] != '\n' && last_node->string[i] != '\0')
-		i++;
-	while (last_node->string[++i] != '\0')
-	{
-		buffer[j] = last_node->string[i];
-		j++;
-	}
+    while (last_node->string[i] && last_node->string[i] != '\n')
+       i++;
+    buffer[j] = '\0';
+	while (last_node->string[i] && last_node->string[i++])
+		buffer[j++] = last_node->string[i];
 	buffer[j] = '\0';
 	newline_node->string = buffer;
-	newline_node->next = NULL;
 	delete_list(list);
+    if(newline_node->string[0])
+        *list = newline_node;
+    else
+        free(newline_node);
+    free(buffer);
+    
 }
 
 void	appendtolist(node_t **list, char *buffer)

@@ -17,6 +17,7 @@ struct				node
 };
 typedef struct node	node_t;
 
+char	*get_next_line(int fd);
 void				delete_list(node_t **list);
 int					characters_to_newline(node_t *list);
 node_t				*find_last_node(node_t *list);
