@@ -6,7 +6,7 @@
 /*   By: aagdemir <aagdemir@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 20:09:37 by aagdemir          #+#    #+#             */
-/*   Updated: 2024/05/19 20:22:36 by aagdemir         ###   ########.fr       */
+/*   Updated: 2024/05/19 21:02:50 by aagdemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,12 +23,10 @@ void	next_line_organizer(node_t **list)
 	int		j;
 
 	buffer = malloc(BUFFER_SIZE + 1);
-        if(buffer == NULL)
+	newline_node = malloc(sizeof(node_t));
+        if(buffer == NULL || newline_node == NULL)
             return ;
 	last_node = find_last_node(*list);
-	newline_node = malloc(sizeof(node_t));
-        if(newline_node == NULL)
-            return ;
 	i = 0;
 	j = 0;
     while (last_node->string[i] && last_node->string[i] != '\n')
@@ -132,7 +130,7 @@ char	*get_next_line(int fd)
 // 	int		fd;
 // 	char	*line;
 
-// 	fd = open("test.txt", O_RDONLY);
+// 	fd = open("lines_around_10.txt", O_RDONLY);
 // 	line = get_next_line(fd);
 // 	while (line != NULL)
 // 	{
