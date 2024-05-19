@@ -6,11 +6,40 @@
 /*   By: aagdemir <aagdemir@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 20:10:05 by aagdemir          #+#    #+#             */
-/*   Updated: 2024/05/15 22:11:00 by aagdemir         ###   ########.fr       */
+/*   Updated: 2024/05/19 08:57:00 by aagdemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+
+node_t	*find_last_node(node_t *list)
+{
+	if (NULL == list)
+		return (NULL);
+	while (list->next)
+		list = list->next;
+	return (list);
+}
+
+int	newline_check(node_t *list)
+{
+	int	i;
+
+	if (NULL == list)
+		return (0);
+	while (list)
+	{
+		i = 0;
+		while (list->string[i] && i < BUFFER_SIZE)
+		{
+			if (list->string[i] == '\n')
+				return (1);
+			++i;
+		}
+		list = list->next;
+	}
+	return (0);
+}
 
 char	*ft_strdup(const char *s1)
 {
@@ -24,6 +53,32 @@ char	*ft_strdup(const char *s1)
 	ft_memcpy(s2, s1, s1len);
 	s2[s1len] = '\0';
 	return (s2);
+}
+
+void	copy_str(node_t *list, char *str)
+{
+	int	i;
+	int	k;
+
+	if (NULL == list)
+		return ;
+	k = 0;
+	while (list)
+	{
+		i = 0;
+		while (list->string[i])
+		{
+			if (list->string[i] == '\n')
+			{
+				str[k++] = '\n';
+				str[k] = '\0';
+				return ;
+			}
+			str[k++] = list->string[i++];
+		}
+		list = list->next;
+	}
+	str[k] = '\0';
 }
 
 

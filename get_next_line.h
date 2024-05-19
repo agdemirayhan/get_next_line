@@ -13,9 +13,12 @@
 # include <string.h>
 # include <unistd.h>
 
+
+#define BUFFER_SIZE 30
+
 struct				node
 {
-	int				value;
+	char			*string;
 	struct node		*next;
 };
 typedef struct node	node_t;
@@ -27,5 +30,8 @@ char				*ft_strchr(const char *s, int c);
 char				*ft_substr(char const *s, unsigned int start, size_t len);
 char				*ft_strdup(const char *s1);
 char				*ft_strjoin(char const *s1, char const *s2);
+int	newline_check(node_t *list);
+node_t	*find_last_node(node_t *list);
+void	copy_str(node_t *list, char *str);
 
 #endif
