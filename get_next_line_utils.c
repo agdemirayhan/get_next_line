@@ -6,7 +6,7 @@
 /*   By: aagdemir <aagdemir@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 20:10:05 by aagdemir          #+#    #+#             */
-/*   Updated: 2024/05/19 08:57:00 by aagdemir         ###   ########.fr       */
+/*   Updated: 2024/05/19 11:22:31 by aagdemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ int	newline_check(node_t *list)
 		{
 			if (list->string[i] == '\n')
 				return (1);
-			++i;
+			i++;
 		}
 		list = list->next;
 	}
@@ -58,11 +58,11 @@ char	*ft_strdup(const char *s1)
 void	copy_str(node_t *list, char *str)
 {
 	int	i;
-	int	k;
+	int	j;
 
 	if (NULL == list)
 		return ;
-	k = 0;
+	j = 0;
 	while (list)
 	{
 		i = 0;
@@ -70,15 +70,16 @@ void	copy_str(node_t *list, char *str)
 		{
 			if (list->string[i] == '\n')
 			{
-				str[k++] = '\n';
-				str[k] = '\0';
+				str[j] = '\n';
+				j++;
+				str[j] = '\0';
 				return ;
 			}
-			str[k++] = list->string[i++];
+			str[j++] = list->string[i++];
 		}
 		list = list->next;
 	}
-	str[k] = '\0';
+	str[j] = '\0';
 }
 
 
