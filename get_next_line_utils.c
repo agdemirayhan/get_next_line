@@ -6,15 +6,15 @@
 /*   By: aagdemir <aagdemir@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 20:10:05 by aagdemir          #+#    #+#             */
-/*   Updated: 2024/05/19 20:09:11 by aagdemir         ###   ########.fr       */
+/*   Updated: 2024/05/22 22:03:57 by aagdemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-void	delete_list(node_t **list)
+void	delete_list(t_node **list)
 {
-	node_t	*tmp;
+	t_node	*tmp;
 
 	if (NULL == *list)
 		return ;
@@ -28,7 +28,7 @@ void	delete_list(node_t **list)
 	*list = NULL;
 }
 
-int	characters_to_newline(node_t *list)
+int	characters_to_newline(t_node *list)
 {
 	int	i;
 	int	len;
@@ -54,7 +54,7 @@ int	characters_to_newline(node_t *list)
 	return (len);
 }
 
-node_t	*find_last_node(node_t *list)
+t_node	*find_last_node(t_node *list)
 {
 	if (NULL == list)
 		return (NULL);
@@ -63,7 +63,7 @@ node_t	*find_last_node(node_t *list)
 	return (list);
 }
 
-int	newline_check(node_t *list)
+int	newline_check(t_node *list)
 {
 	int	i;
 
@@ -72,7 +72,7 @@ int	newline_check(node_t *list)
 	while (list)
 	{
 		i = 0;
-		while (list->string[i] && i < BUFFER_SIZE )
+		while (list->string[i] && i < BUFFER_SIZE)
 		{
 			if (list->string[i] == '\n')
 				return (1);
@@ -82,8 +82,8 @@ int	newline_check(node_t *list)
 	}
 	return (0);
 }
-	
-void	copy_str(node_t *list, char *str)
+
+void	copy_str(t_node *list, char *str)
 {
 	int	i;
 	int	j;
