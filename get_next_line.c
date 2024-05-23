@@ -6,7 +6,7 @@
 /*   By: aagdemir <aagdemir@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 20:09:37 by aagdemir          #+#    #+#             */
-/*   Updated: 2024/05/23 21:57:21 by aagdemir         ###   ########.fr       */
+/*   Updated: 2024/05/23 22:42:07 by aagdemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,17 +51,16 @@ void	appendtolist(t_nod **list, char *buffer)
 	new_node = malloc(sizeof(t_nod));
 	if (new_node == NULL)
 	{
-		free(new_node);
 		free(buffer);
 		return ;
 	}
 	last_nod = find_last_nod(*list);
+	new_node->string = buffer;
+	new_node->next = NULL;
 	if (last_nod == NULL)
 		*list = new_node;
 	else
 		last_nod->next = new_node;
-	new_node->string = buffer;
-	new_node->next = NULL;
 }
 
 void	listhandler(int fd, t_nod **list)
@@ -69,24 +68,21 @@ void	listhandler(int fd, t_nod **list)
 	int		read_block;
 	char	*buffer;
 
-	while (42)
+	while (1)
 	{
 		if (newline_check(*list))
 			return ;
-		else
+		buffer = malloc(BUFFER_SIZE + 1);
+		if (buffer == NULL)
+			return ;
+		read_block = read(fd, buffer, BUFFER_SIZE);
+		if (read_block <= 0)
 		{
-			buffer = malloc(BUFFER_SIZE + 1);
-			if (buffer == NULL)
-				return (free(buffer));
-			read_block = read(fd, buffer, BUFFER_SIZE);
-			if (!read_block)
-			{
-				list = NULL;
-				return (free(buffer));
-			}
-			buffer[read_block] = '\0';
-			appendtolist(list, buffer);
+			free(buffer);
+			return ;
 		}
+		buffer[read_block] = '\0';
+		appendtolist(list, buffer);
 	}
 }
 
@@ -130,7 +126,7 @@ char	*get_next_line(int fd)
 	textarr = fill(list);
 	if (textarr == NULL)
 		return (NULL);
-	next_line_organizer(&list);
+	next_line_organizer(&list);`
 	return (textarr);
 }
 
