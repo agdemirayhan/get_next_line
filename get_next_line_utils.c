@@ -6,18 +6,21 @@
 /*   By: aagdemir <aagdemir@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 20:10:05 by aagdemir          #+#    #+#             */
-/*   Updated: 2024/05/23 19:49:23 by aagdemir         ###   ########.fr       */
+/*   Updated: 2024/05/23 23:00:43 by aagdemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-void	delete_list(t_nod **list)
+void	delete_list(t_nod **list, t_nod *newline_node, char *buffer, int j)
 {
 	t_nod	*tmp;
 
-	if (NULL == *list)
-		return ;
+	buffer[j] = '\0';
+	newline_node->string = buffer;
+	newline_node->next = NULL;
+	if (*list == NULL)
+		return (free(list));
 	while (*list)
 	{
 		tmp = (*list)->next;
@@ -25,7 +28,6 @@ void	delete_list(t_nod **list)
 		free(*list);
 		*list = tmp;
 	}
-	*list = NULL;
 }
 
 int	characters_to_newline(t_nod *list)
@@ -33,7 +35,7 @@ int	characters_to_newline(t_nod *list)
 	int	i;
 	int	len;
 
-	if (NULL == list)
+	if (list == NULL)
 		return (0);
 	len = 0;
 	while (list)
@@ -56,7 +58,7 @@ int	characters_to_newline(t_nod *list)
 
 t_nod	*find_last_nod(t_nod *list)
 {
-	if (NULL == list)
+	if (list == NULL)
 		return (NULL);
 	while (list->next)
 		list = list->next;
@@ -67,7 +69,7 @@ int	newline_check(t_nod *list)
 {
 	int	i;
 
-	if (NULL == list)
+	if (list == NULL)
 		return (0);
 	while (list)
 	{
@@ -88,7 +90,7 @@ void	copy_str(t_nod *list, char *str)
 	int	i;
 	int	j;
 
-	if (NULL == list)
+	if (list == NULL)
 		return ;
 	j = 0;
 	while (list)

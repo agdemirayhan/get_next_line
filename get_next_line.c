@@ -6,7 +6,7 @@
 /*   By: aagdemir <aagdemir@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 20:09:37 by aagdemir          #+#    #+#             */
-/*   Updated: 2024/05/23 22:54:07 by aagdemir         ###   ########.fr       */
+/*   Updated: 2024/05/23 22:59:18 by aagdemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,23 +25,15 @@ void	next_line_organizer(t_nod **list)
 	buffer = malloc(BUFFER_SIZE + 1);
 	newline_node = malloc(sizeof(t_nod));
 	if (buffer == NULL || newline_node == NULL)
-	{
-		free(buffer);       // Free buffer if malloc fails
-		free(newline_node); // Free newline_node if malloc fails
-		return ;
-	}
+		return (free(buffer));
 	last_nod = find_last_nod(*list);
 	i = 0;
 	j = 0;
 	while (last_nod->string[i] && last_nod->string[i] != '\n')
 		i++;
-	buffer[j] = '\0';
 	while (last_nod->string[i] && last_nod->string[i++])
 		buffer[j++] = last_nod->string[i];
-	buffer[j] = '\0';
-	newline_node->string = buffer;
-	newline_node->next = NULL;
-	delete_list(list);
+	delete_list(list, newline_node, buffer, j);
 	if (newline_node->string[0])
 		*list = newline_node;
 	else
@@ -56,7 +48,6 @@ void	appendtolist(t_nod **list, char *buffer)
 	t_nod	*new_node;
 	t_nod	*last_nod;
 
-	last_nod = find_last_nod(*list);
 	new_node = malloc(sizeof(t_nod));
 	if (new_node == NULL)
 	{
@@ -109,8 +100,10 @@ char	*fill(t_nod *list)
 	str_len = characters_to_newline(list);
 	next_str = malloc(str_len + 1);
 	if (next_str == NULL)
-		return (NULL);
+		return (free(next_str), NULL);
 	copy_str(list, next_str);
+	if (next_str == NULL)
+		return (free(next_str), NULL);
 	return (next_str);
 }
 
@@ -137,7 +130,6 @@ char	*get_next_line(int fd)
 	textarr = fill(list);
 	if (textarr == NULL)
 		return (NULL);
-	next_line_organizer(&list);
 	next_line_organizer(&list);
 	return (textarr);
 }
