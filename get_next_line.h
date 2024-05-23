@@ -6,7 +6,7 @@
 /*   By: aagdemir <aagdemir@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 21:59:34 by aagdemir          #+#    #+#             */
-/*   Updated: 2024/05/22 22:02:46 by aagdemir         ###   ########.fr       */
+/*   Updated: 2024/05/23 19:49:07 by aagdemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,13 +27,13 @@ struct					s_node
 	char				*string;
 	struct s_node		*next;
 };
-typedef struct s_node	t_node;
+typedef struct s_node	t_nod;
 
 char					*get_next_line(int fd);
-void					delete_list(t_node **list);
-int						characters_to_newline(t_node *list);
-t_node					*find_last_node(t_node *list);
-int						newline_check(t_node *list);
-void					copy_str(t_node *list, char *str);
+void					delete_list(t_nod **list);
+int						characters_to_newline(t_nod *list);
+t_nod					*find_last_nod(t_nod *list);
+int						newline_check(t_nod *list);
+void					copy_str(t_nod *list, char *str);
 
 #endif

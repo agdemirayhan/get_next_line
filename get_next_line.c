@@ -6,7 +6,7 @@
 /*   By: aagdemir <aagdemir@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 20:09:37 by aagdemir          #+#    #+#             */
-/*   Updated: 2024/05/22 22:03:39 by aagdemir         ###   ########.fr       */
+/*   Updated: 2024/05/23 20:43:01 by aagdemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,26 +14,30 @@
 
 // cc -Wall -Werror -Wextra *.c *.h && ./a.out | cat -e
 
-void	next_line_organizer(t_node **list)
+void	next_line_organizer(t_nod **list)
 {
 	char	*buffer;
-	t_node	*newline_node;
-	t_node	*last_node;
+	t_nod	*newline_node;
+	t_nod	*last_nod;
 	int		i;
 	int		j;
 
 	buffer = malloc(BUFFER_SIZE + 1);
-	newline_node = malloc(sizeof(t_node));
+	newline_node = malloc(sizeof(t_nod));
 	if (buffer == NULL || newline_node == NULL)
+	{
+		free(buffer);       // Free buffer if malloc fails
+		free(newline_node); // Free newline_node if malloc fails
 		return ;
-	last_node = find_last_node(*list);
+	}
+	last_nod = find_last_nod(*list);
 	i = 0;
 	j = 0;
-	while (last_node->string[i] && last_node->string[i] != '\n')
+	while (last_nod->string[i] && last_nod->string[i] != '\n')
 		i++;
 	buffer[j] = '\0';
-	while (last_node->string[i] && last_node->string[i++])
-		buffer[j++] = last_node->string[i];
+	while (last_nod->string[i] && last_nod->string[i++])
+		buffer[j++] = last_nod->string[i];
 	buffer[j] = '\0';
 	newline_node->string = buffer;
 	newline_node->next = NULL;
@@ -47,54 +51,60 @@ void	next_line_organizer(t_node **list)
 	}
 }
 
-void	appendtolist(t_node **list, char *buffer)
+void	appendtolist(t_nod **list, char *buffer)
 {
-	t_node	*new_node;
-	t_node	*last_node;
+	t_nod	*new_node;
+	t_nod	*last_nod;
 
-	last_node = find_last_node(*list);
-	new_node = malloc(sizeof(t_node));
+	last_nod = find_last_nod(*list);
+	new_node = malloc(sizeof(t_nod));
 	if (new_node == NULL)
 		return ;
-	if (NULL == last_node)
+	if (last_nod == NULL)
 		*list = new_node;
 	else
-		last_node->next = new_node;
+		last_nod->next = new_node;
 	new_node->string = buffer;
 	new_node->next = NULL;
 }
 
-void	listhandler(int fd, t_node **list)
+void	listhandler(int fd, t_nod **list)
 {
 	int		read_block;
 	char	*buffer;
 
-	while (!newline_check(*list))
+	while (42)
 	{
-		buffer = malloc(BUFFER_SIZE + 1);
-		if (buffer == NULL)
+		if (newline_check(*list))
 			return ;
-		read_block = read(fd, buffer, BUFFER_SIZE);
-		if (!read_block)
+		else
 		{
-			free(buffer);
-			return ;
+			buffer = malloc(BUFFER_SIZE + 1);
+			read_block = read(fd, buffer, BUFFER_SIZE);
+			if (buffer == NULL)
+				return ;
+			if (!read_block)
+			{
+				list = NULL;
+				free(buffer);
+				return ;
+			}
+			buffer[read_block] = '\0';
+			appendtolist(list, buffer);
 		}
-		buffer[read_block] = '\0';
-		appendtolist(list, buffer);
 	}
 }
 
-char	*fill(t_node *list)
+char	*fill(t_nod *list)
 {
 	int		str_len;
 	char	*next_str;
 
-	if (NULL == list)
+	if (list == NULL)
 		return (NULL);
 	str_len = characters_to_newline(list);
 	next_str = malloc(str_len + 1);
-	if (NULL == next_str)
+	if (next_str == NULL)
 		return (NULL);
 	copy_str(list, next_str);
 	return (next_str);
@@ -102,9 +112,9 @@ char	*fill(t_node *list)
 
 char	*get_next_line(int fd)
 {
-	static t_node	*list;
+	static t_nod	*list;
 	char			*textarr;
-	t_node			*temp;
+	t_nod			*temp;
 
 	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, &textarr, 0) < 0)
 	{
@@ -121,6 +131,8 @@ char	*get_next_line(int fd)
 	if (list == NULL)
 		return (NULL);
 	textarr = fill(list);
+	if (textarr == NULL)
+		return (NULL);
 	next_line_organizer(&list);
 	return (textarr);
 }

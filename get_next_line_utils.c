@@ -6,15 +6,15 @@
 /*   By: aagdemir <aagdemir@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 20:10:05 by aagdemir          #+#    #+#             */
-/*   Updated: 2024/05/22 22:03:57 by aagdemir         ###   ########.fr       */
+/*   Updated: 2024/05/23 19:49:23 by aagdemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-void	delete_list(t_node **list)
+void	delete_list(t_nod **list)
 {
-	t_node	*tmp;
+	t_nod	*tmp;
 
 	if (NULL == *list)
 		return ;
@@ -28,7 +28,7 @@ void	delete_list(t_node **list)
 	*list = NULL;
 }
 
-int	characters_to_newline(t_node *list)
+int	characters_to_newline(t_nod *list)
 {
 	int	i;
 	int	len;
@@ -54,7 +54,7 @@ int	characters_to_newline(t_node *list)
 	return (len);
 }
 
-t_node	*find_last_node(t_node *list)
+t_nod	*find_last_nod(t_nod *list)
 {
 	if (NULL == list)
 		return (NULL);
@@ -63,7 +63,7 @@ t_node	*find_last_node(t_node *list)
 	return (list);
 }
 
-int	newline_check(t_node *list)
+int	newline_check(t_nod *list)
 {
 	int	i;
 
@@ -83,7 +83,7 @@ int	newline_check(t_node *list)
 	return (0);
 }
 
-void	copy_str(t_node *list, char *str)
+void	copy_str(t_nod *list, char *str)
 {
 	int	i;
 	int	j;
