@@ -6,19 +6,17 @@
 /*   By: aagdemir <aagdemir@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 20:09:37 by aagdemir          #+#    #+#             */
-/*   Updated: 2024/05/23 22:59:18 by aagdemir         ###   ########.fr       */
+/*   Updated: 2024/05/25 18:06:06 by aagdemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-// cc -Wall -Werror -Wextra *.c *.h && ./a.out | cat -e
-
 void	next_line_organizer(t_nod **list)
 {
 	char	*buffer;
 	t_nod	*newline_node;
-	t_nod	*last_nod;
+	t_nod	*last_node;
 	int		i;
 	int		j;
 
@@ -26,13 +24,13 @@ void	next_line_organizer(t_nod **list)
 	newline_node = malloc(sizeof(t_nod));
 	if (buffer == NULL || newline_node == NULL)
 		return (free(buffer));
-	last_nod = find_last_nod(*list);
+	last_node = find_last_node(*list);
 	i = 0;
 	j = 0;
-	while (last_nod->string[i] && last_nod->string[i] != '\n')
+	while (last_node->string[i] && last_node->string[i] != '\n')
 		i++;
-	while (last_nod->string[i] && last_nod->string[i++])
-		buffer[j++] = last_nod->string[i];
+	while (last_node->string[i] && last_node->string[i++])
+		buffer[j++] = last_node->string[i];
 	delete_list(list, newline_node, buffer, j);
 	if (newline_node->string[0])
 		*list = newline_node;
@@ -46,7 +44,7 @@ void	next_line_organizer(t_nod **list)
 void	appendtolist(t_nod **list, char *buffer)
 {
 	t_nod	*new_node;
-	t_nod	*last_nod;
+	t_nod	*last_node;
 
 	new_node = malloc(sizeof(t_nod));
 	if (new_node == NULL)
@@ -55,11 +53,11 @@ void	appendtolist(t_nod **list, char *buffer)
 		free(buffer);
 		return ;
 	}
-	last_nod = find_last_nod(*list);
-	if (last_nod == NULL)
+	last_node = find_last_node(*list);
+	if (last_node == NULL)
 		*list = new_node;
 	else
-		last_nod->next = new_node;
+		last_node->next = new_node;
 	new_node->string = buffer;
 	new_node->next = NULL;
 }
@@ -69,6 +67,7 @@ void	listhandler(int fd, t_nod **list)
 	int		read_block;
 	char	*buffer;
 
+	buffer = NULL;
 	while (42)
 	{
 		if (newline_check(*list))
@@ -77,13 +76,10 @@ void	listhandler(int fd, t_nod **list)
 		{
 			buffer = malloc(BUFFER_SIZE + 1);
 			if (buffer == NULL)
-				return (free(buffer));
+				return ;
 			read_block = read(fd, buffer, BUFFER_SIZE);
 			if (!read_block)
-			{
-				list = NULL;
 				return (free(buffer));
-			}
 			buffer[read_block] = '\0';
 			appendtolist(list, buffer);
 		}
@@ -100,10 +96,10 @@ char	*fill(t_nod *list)
 	str_len = characters_to_newline(list);
 	next_str = malloc(str_len + 1);
 	if (next_str == NULL)
-		return (free(next_str), NULL);
+		return (NULL);
 	copy_str(list, next_str);
 	if (next_str == NULL)
-		return (free(next_str), NULL);
+		return (NULL);
 	return (next_str);
 }
 
@@ -134,16 +130,18 @@ char	*get_next_line(int fd)
 	return (textarr);
 }
 
+// cc -g -Wall -Werror -Wextra *.c *.h && ./a.out | cat -e
+
 // #include <time.h>
 
 // int	main(void)
 // {
-// 	int		fd;
-// 	char	*line;
-// 	int		tic;
-// 	int		toc;
+// 	int fd;
+// 	char *line;
+// 	int tic;
+// 	int toc;
 
-// 	fd = open("lines_around_10.txt", O_RDONLY);
+// 	fd = open("1char.txt", O_RDONLY);
 // 	tic = clock();
 // 	line = get_next_line(fd);
 // 	while (line != NULL)

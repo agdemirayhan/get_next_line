@@ -6,7 +6,7 @@
 /*   By: aagdemir <aagdemir@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 20:10:05 by aagdemir          #+#    #+#             */
-/*   Updated: 2024/05/23 23:00:43 by aagdemir         ###   ########.fr       */
+/*   Updated: 2024/05/25 10:11:58 by aagdemir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ int	characters_to_newline(t_nod *list)
 	return (len);
 }
 
-t_nod	*find_last_nod(t_nod *list)
+t_nod	*find_last_node(t_nod *list)
 {
 	if (list == NULL)
 		return (NULL);
@@ -74,7 +74,7 @@ int	newline_check(t_nod *list)
 	while (list)
 	{
 		i = 0;
-		while (list->string[i] && i < BUFFER_SIZE)
+		while (list->string[i])
 		{
 			if (list->string[i] == '\n')
 				return (1);
